@@ -102,7 +102,7 @@ export default function () {
 
 export const MeasurementItem = ({ item }) => {
 
-    const _link = `/weight/${item.id}`
+    const _link = `/medicine/${item.id}`
 
     return (
         <tr>
