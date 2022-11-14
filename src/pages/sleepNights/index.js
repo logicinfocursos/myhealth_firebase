@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import firebase from '../../services/firebaseConnection'
 import { toast } from 'react-toastify'
 
-import { Navbar, Breadcrumb } from '../../components'
+import { Navbar, Breadcrumb, MyLink } from '../../components'
 import { snapshotReadItems } from '../../services/db/snapshotReadItems'
 
 
@@ -63,7 +63,7 @@ export default function () {
 
                 <div className="card-body table-responsive p-0" style={{ height: 500 }}>
 
-                    <table className="table table-head-fixed text-nowrap">
+                <table className="table text-center table-hover table-sm table-responsive table-striped">
 
                         <thead>
                             <tr>
@@ -74,8 +74,6 @@ export default function () {
                                 <th>num horas</th>
                                 <th>sensação</th>
                                 <th>comentários</th>
-                                <th>st</th>
-                                <th></th>
                             </tr>
                         </thead>
 
@@ -107,21 +105,17 @@ export default function () {
 
 export const SleepNightItem = ({ item }) => {
 
+    const _link = `/sleepNight/${item.id}`
+
     return (
         <tr>
-            <td>{item.code}</td>
-            <td>{item.created_at}</td>
-            <td>{item.start}</td>
-            <td>{item.wakeUp}</td>
-            <td>{item.sleepHours}</td>
-            <td>{item.sleepQualitySensation.length > 20 ? item.sleepQualitySensation.substr(0, 20) + " (...)" : item.sleepQualitySensation}</td>
-            <td>{item.comments.length > 20 ? item.comments.substr(0, 20) + " (...)" : item.comments}</td>
-            <td>{item.status == 1 ? 'ok' : ''}</td>
-            <td>
-                <div className="btn-group btn-group-sm" role="group">
-                    <a href={`/sleepNight/${item.id}`} className="btn btn-primary">editar</a>
-                </div>
-            </td>
+            <td><MyLink link={_link}>{item.code}</MyLink></td>
+            <td><MyLink link={_link}>{item.created_at}</MyLink></td>
+            <td><MyLink link={_link}>{item.start}</MyLink></td>
+            <td><MyLink link={_link}>{item.wakeUp}</MyLink></td>
+            <td><MyLink link={_link}>{item.sleepHours}</MyLink></td>
+            <td><MyLink link={_link}>{item.sleepQualitySensation.length > 20 ? item.sleepQualitySensation.substr(0, 20) + " (...)" : item.sleepQualitySensation}</MyLink></td>
+            <td><MyLink link={_link}>{item.comments.length > 20 ? item.comments.substr(0, 20) + " (...)" : item.comments}</MyLink></td>
         </tr>
     )
 }

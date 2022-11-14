@@ -1,8 +1,9 @@
-import { useEffect, useState, } from 'react'
+import { useEffect, useState, useContext} from 'react'
 import firebase from '../../services/firebaseConnection'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 
+import { AuthContext } from '../../contexts/auth'
 import { getDateTime, getCode } from '../../functions'
 import { Navbar, Breadcrumb } from '../../components'
 import { timeCalculation } from '../../functions'
@@ -10,16 +11,18 @@ import { timeCalculation } from '../../functions'
 
 
 const checkFields = false
-let docRef
+let docRef, _user
 
 
 
 export default function () {
 
+    const { user, setUser } = useContext(AuthContext)
     const [sleepNight, setSleepNight] = useState([])
 
     const { id } = useParams()
     const operation = id == 'add' ? 'add' : 'edit'
+    _user = user
 
 
 
@@ -161,6 +164,7 @@ export const submitForm = (event, sleepNight, setSleepNight) => {
             sleepHours: timeCalculation(sleepNight.start, sleepNight.wakeUp),
             sleepQualitySensation: sleepNight.sleepQualitySensation ?? "",
             comments: sleepNight.comments ?? "",
+            userId: _user.uid ?? "",
             userCode: 1,
             status: 1,
             created_at: sleepNight.code ? sleepNight.created_at : getDateTime(),

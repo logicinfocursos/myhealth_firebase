@@ -22,7 +22,8 @@ export default function () {
     const operation = id == 'add' ? 'add' : 'edit'
     _user = user
 
-    console.log(">>> _user", _user)
+
+    
     docRef = firebase.firestore().collection('measurements').doc(id)
 
 

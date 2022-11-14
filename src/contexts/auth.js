@@ -19,7 +19,7 @@ function AuthProvider({ children }){
   useEffect(()=>{
 
     function loadStorage(){
-      const storageUser = localStorage.getItem('myHealthUser')
+      const storageUser = localStorage.getItem('myHealthPro')
 
       if(storageUser){
         setUser(JSON.parse(storageUser))
@@ -107,7 +107,7 @@ function AuthProvider({ children }){
 
 
   function storageUser(data){
-    localStorage.setItem('myHealthUser', JSON.stringify(data))
+    localStorage.setItem('myHealthPro', JSON.stringify(data))
   }
 
 
@@ -115,7 +115,7 @@ function AuthProvider({ children }){
   //Logout do usuario
   async function signOut(){
     await firebase.auth().signOut()
-    localStorage.removeItem('myHealthUser')
+    localStorage.removeItem('myHealthPro')
     setUser(null)
   }
 

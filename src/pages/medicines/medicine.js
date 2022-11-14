@@ -1,24 +1,27 @@
-import { useEffect, useState, } from 'react'
+import { useEffect, useState, useContext} from 'react'
 import firebase from '../../services/firebaseConnection'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 
+import { AuthContext } from '../../contexts/auth'
 import { getDateTime, getCode } from '../../functions'
 import { Navbar, Breadcrumb } from '../../components'
 
 
 
 const checkFields = false
-let docRef
+let docRef, _user
 
 
 
 export default function () {
 
+    const { user, setUser } = useContext(AuthContext)
     const [medicine, setMedicine] = useState([])
     const [measurement, setMeasurement] = useState([])
     const { id } = useParams()
     const operation = id == 'add' ? 'add' : 'edit'
+    _user = user
 
 
 
@@ -145,6 +148,7 @@ export const submitForm = (event, medicine, measurement, setMedicine) => {
             dosage: medicine.dosage ?? '',
             price: !medicine.price || medicine.price < 1 ? 0 : parseFloat(medicine.price).toFixed(2),
             userCode: 1,
+            userId: _user.uid ?? "",
             status: 1,
             created_at: medicine.code ? medicine.created_at : getDateTime(),
             updated_at: getDateTime(),

@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import firebase from '../../services/firebaseConnection'
 import { toast } from 'react-toastify'
 
-import { Navbar, Breadcrumb } from '../../components'
+import { AuthContext } from '../../contexts/auth'
+import { Navbar, Breadcrumb, MyLink } from '../../components'
 import { snapshotReadItems } from '../../services/db/snapshotReadItems'
 
 
@@ -13,29 +14,31 @@ const docRef = firebase.firestore().collection('medicines')
 
 export default function () {
 
+    const { user } = useContext(AuthContext)
     const [medicines, setMedicines] = useState([])
 
-    
+
 
     const fetchData = async () => {
 
         await docRef.orderBy('created_at', 'desc').get()
-          .then((snapshot) => {
-    
-            setMedicines(snapshotReadItems(snapshot))
-    
-          })
-    
-          .catch((error) => {
-    
-            toast.error(`erro ao tentar deleter esse registro - erro: ${error}`)
-    
-          })
-      }
-    
-    
-    
-      useEffect(() => { fetchData() }, [])
+            .then((snapshot) => {
+
+                const _medicines = snapshotReadItems(snapshot).filter((u) => u.userId == user.uid)
+                setMedicines(_medicines)
+
+            })
+
+            .catch((error) => {
+
+                toast.error(`erro ao tentar deleter esse registro - erro: ${error}`)
+
+            })
+    }
+
+
+
+    useEffect(() => { fetchData() }, [])
 
 
 
@@ -58,7 +61,7 @@ export default function () {
 
                 <div className="card-body table-responsive p-0" style={{ height: 500 }}>
 
-                    <table className="table table-head-fixed text-nowrap">
+                    <table className="table text-center table-hover table-sm table-responsive table-striped">
 
                         <thead>
                             <tr>
@@ -68,8 +71,6 @@ export default function () {
                                 <th>laboratório</th>
                                 <th>posologia</th>
                                 <th>R$</th>
-                                <th>st</th>
-                                <th></th>
                             </tr>
                         </thead>
 
@@ -101,20 +102,16 @@ export default function () {
 
 export const MeasurementItem = ({ item }) => {
 
+    const _link = `/weight/${item.id}`
+
     return (
         <tr>
-            <td>{item.code}</td>
-            <td>{item.name}</td>
-            <td>{item.namerefer}</td>
-            <td>{item.laboratory}</td>
-            <td>{item.dosage}</td>
-            <td>{item.price}</td>
-            <td>{item.status == 1 ? 'ok' : ''}</td>
-            <td>
-                <div className="btn-group btn-group-sm" role="group">
-                    <a href={`/medicine/${item.id}`} className="btn btn-primary">editar</a>
-                </div>
-            </td>
+            <td><MyLink link={_link}>{item.code}</MyLink></td>
+            <td><MyLink link={_link}>{item.name}</MyLink></td>
+            <td><MyLink link={_link}>{item.namerefer}</MyLink></td>
+            <td><MyLink link={_link}>{item.laboratory}</MyLink></td>
+            <td><MyLink link={_link}>{item.dosage}</MyLink></td>
+            <td><MyLink link={_link}>{item.price}</MyLink></td>
         </tr>
     )
 }

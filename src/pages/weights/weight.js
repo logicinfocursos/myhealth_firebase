@@ -1,26 +1,29 @@
-import { useEffect, useState, } from 'react'
+import { useEffect, useState, useContext} from 'react'
 import firebase from '../../services/firebaseConnection'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 
+import { AuthContext } from '../../contexts/auth'
 import { getDateTime, getCode } from '../../functions'
 import { Navbar, Breadcrumb } from '../../components'
-import { timeCalculation } from '../../functions'
 
 
 
 const checkFields = true
-let docRef
+let docRef, _user
+
 
 
 export default function () {
 
+    const { user, setUser } = useContext(AuthContext)
     const [weight, setWeight] = useState([])
 
     const { id } = useParams()
     const operation = id == 'add' ? 'add' : 'edit'
+    _user = user
 
-
+    
 
     docRef = firebase.firestore().collection('weights').doc(id)
 
@@ -133,6 +136,7 @@ export const submitForm = (event, weight, setWeight) => {
             comments: weight.comments ?? "",
             weighing_at: weight.weighing_at ?? "",
             userCode: 1,
+            userId: _user.uid ?? "",
             status: 1,
             created_at: weight.code ? weight.created_at : getDateTime(),
             updated_at: getDateTime(),

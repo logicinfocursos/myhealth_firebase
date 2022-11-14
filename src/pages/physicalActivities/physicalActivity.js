@@ -1,8 +1,9 @@
-import { useEffect, useState, } from 'react'
+import { useEffect, useState, useContext} from 'react'
 import firebase from '../../services/firebaseConnection'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 
+import { AuthContext } from '../../contexts/auth'
 import { getDateTime, getCode } from '../../functions'
 import { Navbar, Breadcrumb } from '../../components'
 import { timeCalculation } from '../../functions'
@@ -10,17 +11,19 @@ import { timeCalculation } from '../../functions'
 
 
 const checkFields = false
-let docRef
+let docRef, _user
 
 
 
 export default function () {
 
+    const { user, setUser } = useContext(AuthContext)
     const [physicalActivity, setPhysicalActivity] = useState([])
 
     const { id } = useParams()
     const operation = id == 'add' ? 'add' : 'edit'
-    
+    _user = user
+
 
 
     docRef = firebase.firestore().collection('physicalActivities').doc(id)
@@ -221,6 +224,7 @@ export const submitForm = (event, physicalActivity, setPhysicalActivity) => {
             end: physicalActivity.end ?? "",
             comments: physicalActivity.comments ?? "",
             time: timeCalculation(physicalActivity.start, physicalActivity.end),
+            userId: _user.uid ?? "",
             userCode: 1,
             status: 1,
             created_at: physicalActivity.code ? physicalActivity.created_at : getDateTime(),

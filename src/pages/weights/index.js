@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import firebase from '../../services/firebaseConnection'
 import { toast } from 'react-toastify'
 
-import { Navbar, Breadcrumb } from '../../components'
+import { AuthContext } from '../../contexts/auth'
+import { Navbar, Breadcrumb, MyLink } from '../../components'
 import { snapshotReadItems } from '../../services/db/snapshotReadItems'
 
 
@@ -13,6 +14,7 @@ const docRef = firebase.firestore().collection('weights')
 
 export default function () {
 
+    const { user } = useContext(AuthContext)
     const [weights, setWeights] = useState([])
 
 
@@ -22,7 +24,8 @@ export default function () {
         await docRef.orderBy('created_at', 'desc').get()
             .then((snapshot) => {
 
-                setWeights(snapshotReadItems(snapshot))
+                const _weights = snapshotReadItems(snapshot).filter((u) => u.userId == user.uid)
+                setWeights(_weights)
 
             })
 
@@ -60,7 +63,7 @@ export default function () {
 
                 <div className="card-body table-responsive p-0" style={{ height: 500 }}>
 
-                    <table className="table table-head-fixed text-nowrap">
+                    <table className="table text-center table-hover table-sm table-responsive table-striped">
 
                         <thead>
                             <tr>
@@ -68,8 +71,6 @@ export default function () {
                                 <th>data</th>
                                 <th>valor</th>
                                 <th>comentários</th>
-                                <th>st</th>
-                                <th></th>
                             </tr>
                         </thead>
 
@@ -101,18 +102,14 @@ export default function () {
 
 export const WeightItem = ({ item }) => {
 
+    const _link = `/weight/${item.id}`
+
     return (
         <tr>
-            <td>{item.code}</td>
-            <td>{item.created_at}</td>
-            <td>{item.value}</td>
-            <td>{item.comments}</td>
-            <td>{item.status == 1 ? 'ok' : ''}</td>
-            <td>
-                <div className="btn-group btn-group-sm" role="group">
-                    <a href={`/weight/${item.id}`} className="btn btn-primary">editar</a>
-                </div>
-            </td>
+            <td><MyLink link={_link}>{item.code}</MyLink></td>
+            <td><MyLink link={_link}>{item.created_at}</MyLink></td>
+            <td><MyLink link={_link}>{item.value}</MyLink></td>
+            <td><MyLink link={_link}>{item.comments}</MyLink></td>
         </tr>
     )
 }

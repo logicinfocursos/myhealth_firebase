@@ -3,7 +3,7 @@ import firebase from '../../services/firebaseConnection'
 import { toast } from 'react-toastify'
 
 import { AuthContext } from '../../contexts/auth'
-import { Navbar, Breadcrumb } from '../../components'
+import { Navbar, Breadcrumb, MyLink } from '../../components'
 
 
 
@@ -23,7 +23,7 @@ export default function () {
     await docRef.orderBy('created_at', 'desc').get()
       .then((snapshot) => {
 
-        const _measurements = snapshotReadItems(snapshot).filter((u)=>u.userId==user.uid)
+        const _measurements = snapshotReadItems(snapshot).filter((u) => u.userId == user.uid)
         setMeasurements(_measurements)
 
       })
@@ -62,17 +62,16 @@ export default function () {
 
         <div className="card-body table-responsive p-0" style={{ height: 500 }}>
 
-          <table className="table table-head-fixed text-nowrap table-hover table-sm table-responsive">
+          <table className="table text-center table-hover table-sm table-responsive table-striped">
 
-            <thead className="table-dark">
+            <thead>
               <tr>
                 <th>cod</th>
-                <th>dt</th>              
+                <th>data</th>
                 <th>máxima</th>
                 <th>minima</th>
                 <th>batimentos</th>
                 <th>peso</th>
-                <th></th>
               </tr>
             </thead>
 
@@ -123,19 +122,18 @@ export const snapshotReadItems = (snapshot) => {
 
 export const MeasurementItem = ({ item }) => {
 
+  const _link = `/dailyMeasurement/${item.id}`
+
   return (
+
     <tr>
-      <td>{item.code}</td>
-      <td>{item.measurement_at.substr(0,16)}</td>     
-      <td>{item.maximum}</td>
-      <td>{item.minimum}</td>
-      <td>{item.heartbeat}</td>
-      <td>{item.weight}</td>
-      <td>
-        <div className="btn-group btn-group-sm" role="group">
-          <a href={`/dailyMeasurement/${item.id}`} className="btn btn-primary"><i className="fas fa-pen text-primary"></i>editar</a>
-        </div>
-      </td>
-    </tr>
+      <td><MyLink link={_link}>{item.code}</MyLink></td>
+      <td><MyLink link={_link}>{item.measurement_at.substr(0, 16)}</MyLink></td>
+      <td><MyLink link={_link}>{item.maximum}</MyLink></td>
+      <td><MyLink link={_link}>{item.minimum}</MyLink></td>
+      <td><MyLink link={_link}>{item.heartbeat}</MyLink></td>
+      <td><MyLink link={_link}>{item.weight}</MyLink></td>
+    </tr >
+
   )
 }

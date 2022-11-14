@@ -1,24 +1,29 @@
-import { useEffect, useState, } from 'react'
+import { useEffect, useState, useContext} from 'react'
 import firebase from '../../services/firebaseConnection'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 
+import { AuthContext } from '../../contexts/auth'
 import { getDateTime, getCode } from '../../functions'
 import { Navbar, Breadcrumb } from '../../components'
 
 
 
 const checkFields = true
-let docRef
+let docRef, _user
 
 
 
 export default function () {
 
+    const { user, setUser } = useContext(AuthContext)
     const [food, setFood] = useState([])
 
     const { id } = useParams()
     const operation = id == 'add' ? 'add' : 'edit'
+    _user = user
+
+
 
     docRef = firebase.firestore().collection('foods').doc(id)
 
@@ -166,6 +171,7 @@ export const submitForm = (event, food, setFood) => {
             foodDetails: food.foodDetails ?? "",
             caloriesCalculation: food.caloriesCalculation > 0 ? food.caloriesCalculation : 0,
             comments: food.comments ?? "",
+            userId: _user.uid ?? "",
             status: 1,
             created_at: food.code ? food.created_at : getDateTime(),
             updated_at: getDateTime(),

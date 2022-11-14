@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import firebase from '../../services/firebaseConnection'
 import { toast } from 'react-toastify'
 
-import { Navbar, Breadcrumb } from '../../components'
+import { Navbar, Breadcrumb, MyLink } from '../../components'
 
 
 
@@ -58,7 +58,7 @@ export default function () {
 
                 <div className="card-body table-responsive p-0" style={{ height: 500 }}>
 
-                    <table className="table table-head-fixed text-nowrap">
+                <table className="table text-center table-hover table-sm table-responsive table-striped">
 
                         <thead>
                             <tr>
@@ -69,8 +69,6 @@ export default function () {
                                 <th>sensação</th>
                                 <th>detalhes</th>
                                 <th>comentários</th>
-                                <th>st</th>
-                                <th></th>
                             </tr>
                         </thead>
 
@@ -81,7 +79,7 @@ export default function () {
 
                                     ? foods.map((item, key) => {
                                         return (
-                                            <SleepNightItem
+                                            <FoodItem
                                                 item={item}
                                                 key={key}
                                             />
@@ -117,23 +115,19 @@ export const snapshotReadItems = (snapshot) => {
 
 
 
-export const SleepNightItem = ({ item }) => {
+export const FoodItem = ({ item }) => {
+
+    const _link = `/food/${item.id}`
 
     return (
         <tr>
-            <td>{item.code}</td>
-            <td>{item.created_at}</td>
-            <td>{item.type}</td>
-            <td>{item.estimatedCalories}</td>
-            <td>{item.perceivedSensation}</td>
-            <td>{item.foodDetails.length > 20 ? item.foodDetails.substr(0, 20) + " (...)" : item.foodDetails}</td>
-            <td>{item.comments.length > 20 ? item.comments.substr(0, 20) + " (...)" : item.comments}</td>
-            <td>{item.status == 1 ? 'ok' : ''}</td>
-            <td>
-                <div className="btn-group btn-group-sm" role="group">
-                    <a href={`/food/${item.id}`} className="btn btn-primary">editar</a>
-                </div>
-            </td>
+            <td><MyLink link={_link}>{item.code}</MyLink></td>
+            <td><MyLink link={_link}>{item.created_at}</MyLink></td>
+            <td><MyLink link={_link}>{item.type}</MyLink></td>
+            <td><MyLink link={_link}>{item.estimatedCalories}</MyLink></td>
+            <td><MyLink link={_link}>{item.perceivedSensation}</MyLink></td>
+            <td><MyLink link={_link}>{item.foodDetails.length > 20 ? item.foodDetails.substr(0, 20) + " (...)" : item.foodDetails}</MyLink></td>
+            <td><MyLink link={_link}>{item.comments.length > 20 ? item.comments.substr(0, 20) + " (...)" : item.comments}</MyLink></td>
         </tr>
     )
 }
